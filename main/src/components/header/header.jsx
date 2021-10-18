@@ -24,7 +24,7 @@ import logolighttext from "../../assets/images/logo-light-text.png";
 import profilephoto from "../../assets/images/users/1.jpg";
 import { useHistory } from "react-router";
 
-const Header = () => {
+const Header = (props) => {
   const history = useHistory();
   const showMobilemenu = () => {
     document.getElementById("main-wrapper").classList.toggle("show-sidebar");
@@ -102,6 +102,10 @@ const Header = () => {
                 />
               </DropdownToggle>
               <DropdownMenu right className="user-dd">
+                <DropdownItem>
+                  <b>{props.name}</b>
+                  <div style={{ height: 5, backgroundColor: "black" }} />
+                </DropdownItem>
                 <DropdownItem href="/home">
                   <i className="ti-user mr-1 ml-1" /> My Boards
                 </DropdownItem>

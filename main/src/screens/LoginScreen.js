@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import style from "../styles/Login.module.css";
 
 const LoginScreen = () => {
   const history = useHistory();
@@ -105,8 +106,8 @@ const LoginScreen = () => {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
-        localStorage.setItem("token", JSON.stringify(data));
+        localStorage.clear();
+        localStorage.setItem("token", data.jwt);
 
         // history.push("/home");
         // setTest(data[0].title);
@@ -117,7 +118,6 @@ const LoginScreen = () => {
         // localStorage.setItem("token", token);
         // // localStorage.setItem("token", { data });
         // // var token = localStorage.getItem("token");
-        console.log("eeeeeeeee" + value.JSON);
 
         history.push("/home");
       });

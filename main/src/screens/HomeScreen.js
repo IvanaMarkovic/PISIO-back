@@ -25,7 +25,8 @@ import Header from "../components/header/header";
 
 const HomeScreen = () => {
   const history = useHistory();
-
+  let loggedUserFullName = "";
+  const token = localStorage.getItem("token");
   const [boards, setBoards] = useState(null);
 
   const [members, setMembers] = useState(null);
@@ -34,31 +35,29 @@ const HomeScreen = () => {
   useEffect(() => {
     // const fetchBoardsApi = () => {
     getBoards();
-    getMembers();
     // };
   }, []);
 
   const getBoards = () => {
-    fetch(
-      "http://localhost:3447/member/all_boards?id=5"
-      // , {
-      //   headers: {
-      //     Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMyIsImV4cCI6MTYzNDU0MTI2MCwiaWF0IjoxNjM0NTA1MjYwfQ.BBU2sr_8bizGEA2mmp2Mt64TuE-FDHudaAtmSQSFEiQ`,
-      //   },
-      // }
-    )
+    console.log(token);
+    fetch("http://localhost:3447/member/all_boards", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => {
         return res.json();
       })
       .then((data) => {
-        setBoards(data);
+        loggedUserFullName = data.fullName;
+        setBoards(data.listOfBoards);
       });
   };
 
-  const getMembers = () => {
-    fetch("http://localhost:3447/board/all_members?id=1", {
+  const getMembers = async (boardId) => {
+    fetch("http://localhost:3447/board/all_members?id=" + boardId, {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyNSIsImV4cCI6MTYzNDU3OTQ1MSwiaWF0IjoxNjM0NTQzNDUxfQ.HGneD7H0KdzMTbUUtv93ZXIuLZcPw8oRA9N3NCvllE4`,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
@@ -71,7 +70,7 @@ const HomeScreen = () => {
 
   return (
     <>
-      <Header />
+      <Header name={loggedUserFullName} />
       <Row>
         {boards &&
           boards.map((item) => (
@@ -80,7 +79,10 @@ const HomeScreen = () => {
                 onClick={() =>
                   history.push({
                     pathname: "/board",
-                    state: { boardId: item.boardId },
+                    state: {
+                      boardId: item.boardId,
+                      loggedUserFullName: loggedUserFullName,
+                    },
                   })
                 }
               >

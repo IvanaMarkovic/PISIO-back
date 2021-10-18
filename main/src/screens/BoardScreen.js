@@ -10,7 +10,7 @@ const BoardScreen = (rops) => {
   const location = useLocation();
   const [lists, setLists] = useState([]);
   const [cardOpened, setCardOpened] = useState(false);
-
+  const token = localStorage.getItem("token");
   const globalData = { lanes: [] };
 
   useEffect(() => {
@@ -19,7 +19,13 @@ const BoardScreen = (rops) => {
 
   const fetchBoardsApi = () => {
     fetch(
-      "http://localhost:3447/board/all_trellolists?id=" + location.state.boardId
+      "http://localhost:3447/board/all_trellolists?id=" +
+        location.state.boardId,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     )
       .then((res) => {
         return res.json();
@@ -33,6 +39,7 @@ const BoardScreen = (rops) => {
     fetch("http://localhost:3447/trello_list/add_new_list", {
       headers: {
         "Content-type": "application/json; charset=UTF-8",
+        Authorization: `Bearer ${token}`,
       },
       // method: "GET",
       method: "POST",
@@ -50,6 +57,7 @@ const BoardScreen = (rops) => {
     fetch("http://localhost:3447/card/add_new_card", {
       headers: {
         "Content-type": "application/json; charset=UTF-8",
+        Authorization: `Bearer ${token}`,
       },
       // method: "GET",
       method: "POST",
@@ -63,6 +71,27 @@ const BoardScreen = (rops) => {
     }).then((res) => {
       return res.json();
     });
+  };
+
+  const updateListApi = (laneId, name) => {
+    console.log(laneId, name);
+    fetch("/trello_list/update_list_name", {
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      method: "PUT",
+      body: JSON.stringify({
+        trellolistId: laneId.toString(),
+        name: name.toString(),
+      }),
+      // body: JSON.stringify({ password: "test123", username: "test" }), // body data type must match "Content-Type" header
+    })
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => console.log(err));
   };
 
   const data = {
@@ -128,7 +157,7 @@ const BoardScreen = (rops) => {
   return (
     <div>
       {cardOpened && <CardModal cardId={cardMetadata} />}
-      <Header></Header>
+      <Header name={location.state.loggedUserFullName}></Header>
       <Board
         draggable
         collapsibleLanes
@@ -148,6 +177,9 @@ const BoardScreen = (rops) => {
         onCardAdd={(name, laneId) =>
           addCardApi(name, laneId, location.state.boardId)
         }
+        onLaneUpdate={(laneId, name) => {
+          updateListApi(laneId, name.title);
+        }}
         data={lists.length > 0 ? filterData() : globalData}
       />
     </div>

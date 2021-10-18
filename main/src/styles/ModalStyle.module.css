@@ -1,0 +1,48 @@
+.style {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: left;
+  border-style: 2px solid;
+  width: 90%;
+  font-size: large;
+  font-weight: 800;
+}
+
+.all {
+  padding: 15px;
+  padding-inline: 15px;
+}
+
+.all_style {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: right;
+  border-style: 2px solid;
+  border-radius: 1% black;
+  width: 70%;
+  font-size: medium;
+}
+
+.btn {
+  background-color: blue;
+  color: white;
+  font-size: small;
+}
+
+.txt {
+  font-size: small;
+}
+
+.comments {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: left;
+  border-radius: 1% black;
+  width: 70%;
+  font-size: medium;
+  border-bottom: black;
+  border-bottom-color: black;
+}
